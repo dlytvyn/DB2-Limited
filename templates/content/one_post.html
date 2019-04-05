@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+    User Page
+{% endblock %}
+
+{% block content %}
+
+        <div class="card" style="width: 18rem;">
+          {% if post.photo %}
+                    <img class="card-img-top" style="margin-bottom: 1rem" src="/media/{{ post.photo }}" alt="Card image cap">
+          {% endif %}
+          {% if request.user in post.liked_users %}
+              <a href="liked/" class="btn btn-primary">Liked</a>
+          {% else %}
+              <a href="like/" class="btn btn-primary">Like</a>
+          {% endif %}
+          <h3>Likes: {{ post.likes.all.count }}</h3>
+          <div class="card-body">
+            <h2 class="card-title">{{ post.title }}</h2>
+            <p class="card-text">{{ post.post_body }}</p>
+          </div>
+        </div>
+
+        <form action="add_comment" style="width: 28rem; margin-top: 30px;" method="post">
+            {% csrf_token %}
+            <div>
+                 {{ form | crispy}}
+            </div>
+            <input type="submit" value="Comment">
+        </form>
+        <h3>Users Comments</h3>
+        {% for comment in post.comments.all %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        </div><!-- /col-sm-12 -->
+                            </div><!-- /row -->
+                                <div class="row">
+                                <div class="col-sm-1">
+                                <div class="thumbnail">
+                                {% if not comment.author.avatar %}
+                                    <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                                {% else %}
+                                    <img class="img-responsive user-photo" src={{ comment.author.avatar.url }}>
+                                {% endif %}
+                                </div><!-- /thumbnail -->
+                                </div><!-- /col-sm-1 -->
+
+                                <div class="col-sm-5">
+                                <div class="panel panel-default">
+                                <div class="panel-heading">
+                                <strong>{{ comment.author.username }}</strong>
+                                </div>
+                                <div class="panel-body">
+                                {{ comment.comment_text }}
+                                </div><!-- /panel-body -->
+                                </div><!-- /panel panel-default -->
+                                </div><!-- /col-sm-5 -->
+
+                            </div><!-- /panel panel-default -->
+                    </div><!-- /col-sm-5 -->
+                </div><!-- /row -->
+            {% endfor %}
+
+        </div><!-- /container -->
+
+
+{% endblock %}

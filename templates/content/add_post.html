@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+
+    <form action="{% url 'account:add_post' %}"
+            method="post"
+            enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <p>Please add your post.</p>
+
+            {{ form | crispy}}
+
+        <button type="submit" class="btn btn-success">Add post </button>
+    </form>
+
+{% endblock %}
